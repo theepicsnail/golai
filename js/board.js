@@ -1,15 +1,14 @@
-define(["./utils", "./life", "./actions"], function(U, Life, A) {
+define(["./utils"], function(U) {
   var canvas = document.getElementsByTagName("canvas")[0];
   var ctx = canvas.getContext("2d");
 
   function Board(rows, cols, seedFunction, updateFunction) {
     this.rows = rows;
     this.cols = cols;
-    this.oldCells = U.create2DArray(this.rows, this.cols);
+    this.dirty = [];
     this._cells = U.create2DArray(this.rows, this.cols, seedFunction);
     this.updateFunction = updateFunction;
-    this.update();
-
+    this.updateAll();
   }
 
   Board.prototype.getRows = function() {
@@ -19,20 +18,28 @@ define(["./utils", "./life", "./actions"], function(U, Life, A) {
     return this.cols;
   };
 
-  Board.prototype.update = function () {
+  Board.prototype.updateAll = function () {
     /*
-     * Compare the current cells array to the old one
-     * redraw any differences and update the old array
+     * Redraw all cells.
      */
+    this.dirty.length = 0;
     var i,j;
     for(i = 0; i < this.rows ; i ++) {
     for(j = 0; j < this.cols ; j ++) {
-      if (this.oldCells[i][j] !== this._cells[i][j]) {
-        this.oldCells[i][j] = this._cells[i][j];
-        this.drawCell(i*10, j*10, 10, 10, this._cells[i][j]);
-      }
+      this.drawCell(i*10, j*10, 10, 10, this._cells[i][j]);
     }}
   };
+
+  Board.prototype.updateDirty = function () {
+    /*
+     * Redraw only dirty cells.
+     */
+    var i;
+    for(i = this.dirty.length-1; i >=0 ; --i) {
+      var tmp = this.dirty[i];
+      this.drawCell(tmp[0]*10, tmp[1]*10, 10, 10, this._cells[tmp[0]][tmp[1]]);
+    }
+  }
 
   Board.prototype.drawCell = function(x,y,w,h, cell) {
     if(cell === null) {
@@ -44,7 +51,12 @@ define(["./utils", "./life", "./actions"], function(U, Life, A) {
   };
 
   Board.prototype.setCell = function(row, col, cell) {
-    this._cells[row][col] = cell;
+    row = (row%this.rows+this.rows)%this.rows;
+    col = (col%this.cols+this.cols)%this.cols;
+    if (cell != this._cells[row][col]) {
+      this._cells[row][col] = cell;
+      this.dirty.push([row,col])
+    }
   };
 
   Board.prototype.getCell = function(row, col) {
@@ -57,7 +69,7 @@ define(["./utils", "./life", "./actions"], function(U, Life, A) {
 
   Board.prototype.advanceState = function() {
     this.updateFunction(this);
-    this.update(); // redraw
+    this.updateDirty(); // redraw
   };
 
   return Board;
