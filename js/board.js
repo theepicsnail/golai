@@ -28,11 +28,12 @@ define(["./utils", "./life", "./actions"], function(U, Life, A) {
   };
 
   Board.prototype.drawCell = function(x,y,w,h, cell) {
-    if(cell === null)
+    if(cell === null) {
       ctx.fillStyle="white";
-    else
-      ctx.fillStyle= cell.getColor();
-    ctx.fillRect(x,y,w,h);
+      ctx.fillRect(x,y,w,h);
+    } else {
+      cell.draw(ctx, x, y, w, h);
+    }
   };
 
   Board.prototype.cellAt = function(row, col) {

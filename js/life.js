@@ -45,5 +45,10 @@ define(["./actions", "./utils", "./genes"], function(A, U, Genes) {
                + "00";
   };
 
+  Life.prototype.draw = function(ctx, x, y, w, h) {
+    ctx.fillStyle = this.getColor();
+    ctx.fillRect(x,y,w,h);
+  }
+
   return Life;
 });
