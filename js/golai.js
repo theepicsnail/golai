@@ -1,9 +1,8 @@
-require(['./board'], function(Board) {
+require(['./board', './life'], function(Board, Life) {
   Math.seedrandom("");
 
-  var fill_precent = 0.5;
   function seedFunction(row, col) {
-    if(Math.random() < fill_percent){
+    if(Math.random() < 0.5){
       return new Life();
     }
     return null;
