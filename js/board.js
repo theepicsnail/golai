@@ -60,45 +60,5 @@ define(["./utils", "./life", "./actions"], function(U, Life, A) {
     this.update(); // redraw
   };
 
-  Board.prototype.resolveCollision = function (cells) {
-    /*
-     * Returns either a Cell (the survivor of a fight)
-     * or A.BREED if breeding was done, and children need created.
-     */
-    function fight(cells) {
-      var attacker = cells[U.randInt(cells.length)];
-      var v_id = U.randInt(cells.length);
-      var victim = cells[v_id];
-      if(attacker === victim) {
-        return;
-      }
-      victim.health -= attacker.getAttack();
-      if (victim.health <=0 ) {
-        cells.splice(v_id, 1);
-      }
-
-    }
-
-    while(cells.length > 2) {
-      fight(cells);
-    }
-
-    if(cells.length != 2)
-      console.warn("More than 2 cells alive at invalid point in time.", cells.length);
-
-    var a1 = cells[0].fightOrBreed(cells[1].getVisibleState());
-    var a2 = cells[1].fightOrBreed(cells[0].getVisibleState());
-
-    if (a1 == A.BREED && a2 == A.BREED) {
-      return A.BREED;
-    } else {
-      while(cells.length > 1) {
-        fight(cells);
-      }
-      return cells[0];
-    }
-
-  };
-
   return Board;
 });
