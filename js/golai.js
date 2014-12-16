@@ -1,4 +1,4 @@
-require(['./board', './life'], function(Board, Life) {
+require(['./board', './life', './golai_engine'], function(Board, Life, Engine) {
   Math.seedrandom("");
 
   function seedFunction(row, col) {
@@ -8,7 +8,7 @@ require(['./board', './life'], function(Board, Life) {
     return null;
   }
 
-  var b = new Board(10,10, seedFunction );
+  var b = new Board(10,10, Engine.seedFunction);
   b.advanceState();
   window.b = b;
   n = setInterval(b.advanceState.bind(b), 200);
