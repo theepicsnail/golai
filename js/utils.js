@@ -23,7 +23,7 @@ define([], function(){
       return Math.floor(Math.random()*(high-low)+low);
     },
     floatToHex: function(f) {
-      return ((1+f) * 256).toString(16).substring(1,3);
+      return ((1+f) * 255).toString(16).substring(1,3);
     }
   };
 });

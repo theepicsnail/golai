@@ -23,7 +23,12 @@ define(["./actions", "./utils", "./genes"], function(A, U, Genes) {
   };
 
   Life.prototype.fightOrBreed = function(otherCellState) {
-    return Math.random() > this.genes.max_health ? A.FIGHT: A.BREED;
+    var dhealth = (otherCellState[1] - this.health);
+    var dattack = (otherCellState[2] - this.attack);
+
+    var distance = (dhealth * dhealth + dattack  * dattack)
+    console.log(distance);
+    return Math.random() < distance ? A.FIGHT: A.BREED;
   };
 
   Life.prototype.getAttack = function() {
@@ -40,8 +45,8 @@ define(["./actions", "./utils", "./genes"], function(A, U, Genes) {
   };
 
   Life.prototype.getColor = function() {
-    return "#" + U.floatToHex(this.attack)
-               + U.floatToHex(this.health)
+    return "#" + U.floatToHex(this.genes.max_attack)
+               + U.floatToHex(this.genes.max_health)
                + "00";
   };
 

@@ -5,6 +5,8 @@ define(["./utils"], function(U) {
   function Board(rows, cols, seedFunction, updateFunction) {
     this.rows = rows;
     this.cols = cols;
+    canvas.width=10*cols;
+    canvas.height=10*rows;
     this.dirty = [];
     this._cells = U.create2DArray(this.rows, this.cols, seedFunction);
     this.updateFunction = updateFunction;
@@ -47,6 +49,7 @@ define(["./utils"], function(U) {
       ctx.fillRect(x,y,w,h);
     } else {
       cell.draw(ctx, x, y, w, h);
+///      console.log(cell)
     }
   };
 
